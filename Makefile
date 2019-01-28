@@ -2,7 +2,7 @@
 # Makefile fuer den QSDL-Parser
 #
 #
-# $Author: hirche $
+# Author: Marc Diefenbruch
 # $Date: 1998/02/19 16:14:30 $
 #
 # (C) 1995 Universitaet GH Essen
@@ -424,10 +424,25 @@ $(OBJDIR): $(OBJBASEDIR)
 		echo Creating $(OBJDIR) ...; \
 		$(MKDIR) $(OBJDIR); fi
 
+$(LIBDIR): 
+	@if [ ! \( -d $(LIBDIR) \) ]; then \
+		echo Creating $(LIBDIR) ...; \
+		$(MKDIR) $(LIBDIR); fi
+
 $(PSDIR): 
 	@if [ ! \( -d $(PSDIR) \) ]; then \
 		echo Creating $(PSDIR) ...; \
 		$(MKDIR) $(PSDIR); fi
+
+$(INCDIR): 
+	@if [ ! \( -d $(INCDIR) \) ]; then \
+		echo Creating $(INCDIR) ...; \
+		$(MKDIR) $(INCDIR); fi
+
+$(INCDIR)/QP: $(INCDIR)
+	@if [ ! \( -d $(INCDIR)/QP \) ]; then \
+		echo Creating $(INCDIR)/QP ...; \
+		$(MKDIR) $(INCDIR)/QP; fi
 
 $(DEPFILE):
 	$(TOUCH) $(DEPFILE)
@@ -438,7 +453,7 @@ install-lib: $(OUTPUT) $(LIBDIR)
 	@echo Installing new library $(notdir $(OUTPUT)) in $(LIBDIR) ...
 	$(CP)  $(OUTPUT) $(LIBDIR)
 
-install-includes:  $(HEADERS)
+install-includes:  $(HEADERS) $(INCDIR)/QP
 	@echo Deleting old include files from $(INCDIR)/QP ...
 	-$(RM) $(INCDIR)/QP/*.h
 	@echo Installing new include files in $(INCDIR)/QP ...
@@ -472,7 +487,7 @@ postscript: $(LFILES) $(YFILES) $(PSDIR)
 	@for X in $(YFILES); do \
 		echo Generating $$X.$(PS_SUFFIX) from $$X ...; \
 		$(MAKE_PS) $(MAKE_PS_FLAGS) $(PSDIR)/$$X.$(PS_SUFFIX) $$X; done
-		
+
 print: postscript
 	$(PRINT) $(PSDIR)/*.$(PS_SUFFIX)
 	-$(RM) *.$(PS_SUFFIX)
