@@ -329,7 +329,7 @@ HEADERS =\
 TMPSRCS =\
 	$(YOUTPUT)\
 	$(LOUTPUT)
-	
+
 SRCS =\
 	QPAction.cpp\
 	QPActual.cpp\
@@ -386,11 +386,11 @@ $(OUTPUT): $(OBJS)
 
 all: $(OUTPUT)
 
-$(OBJDIR)/%.o: %.c 
+$(OBJDIR)/%.o: %.c $(OBJDIR)
 	@echo Compiling $< ...
 	$(CC) -c $(CFLAGS) $(PFLAGS) -I$(INCDIR) $(DEFINES) $< -o $@ 2>> $(LOGFILE)
 
-$(OBJDIR)/%.o: %.cpp 
+$(OBJDIR)/%.o: %.cpp $(OBJDIR)
 	@echo Compiling $< ...
 	$(C++) -c $(CPPFLAGS) $(TFLAGS) $(PFLAGS) $(DEFINES) $(INCLUDES) $< -o $@ 2>> $(LOGFILE)
 
