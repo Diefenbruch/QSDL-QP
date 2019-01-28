@@ -201,7 +201,7 @@ CP = /bin/cp -p
                          # Befehl zum Kopieren von Dateien
 TOUCH = touch
                          # Befehl zum Aktualisieren des Dateidatums
-MKDIR = mkdir
+MKDIR = mkdir -p
                          # Befehl zum Erzeugen von Directories
 ifeq ($(TOOLS), GNU)
 
