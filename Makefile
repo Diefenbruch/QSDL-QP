@@ -386,11 +386,11 @@ $(OUTPUT): $(OBJS)
 
 all: $(OUTPUT)
 
-$(OBJDIR)/%.o: %.c $(OBJDIR)
+$(OBJDIR)/%.o: %.c
 	@echo Compiling $< ...
 	$(CC) -c $(CFLAGS) $(PFLAGS) -I$(INCDIR) $(DEFINES) $< -o $@ 2>> $(LOGFILE)
 
-$(OBJDIR)/%.o: %.cpp $(OBJDIR)
+$(OBJDIR)/%.o: %.cpp
 	@echo Compiling $< ...
 	$(C++) -c $(CPPFLAGS) $(TFLAGS) $(PFLAGS) $(DEFINES) $(INCLUDES) $< -o $@ 2>> $(LOGFILE)
 
