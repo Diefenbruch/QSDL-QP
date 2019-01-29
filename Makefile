@@ -386,6 +386,8 @@ $(OUTPUT): $(OBJS)
 
 all: $(OUTPUT)
 
+$(OBJS): $(OBJDIR)
+
 $(OBJDIR)/%.o: %.c
 	@echo Compiling $< ...
 	$(CC) -c $(CFLAGS) $(PFLAGS) -I$(INCDIR) $(DEFINES) $< -o $@ 2>> $(LOGFILE)
