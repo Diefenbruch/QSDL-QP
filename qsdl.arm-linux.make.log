@@ -1,4 +1,0 @@
-lex.yy.c:3865:17: warning: 'yyunput' defined but not used [-Wunused-function]
-     static void yyunput (int c, char * yy_bp )
-                 ^~~~~~~
-ar: creating obj/arm-linux/libQP.a

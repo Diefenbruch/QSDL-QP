@@ -372,12 +372,13 @@ SRCS =\
 OBJS = $(addprefix $(OBJDIR)/, $(TMPSRCS:.c=.o)) \
        $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
-######################
-# 7. Makefileregeln: #
-######################
+##################################################
+# 7. Makefileregeln:                             #
+#    Abhängigkeiten hinter dem | Symbol sind     #
+#    logische aber keine Zeit-Abhängigkeiten!    #
+##################################################
 
-default: clean-rubbish $(OBJDIR) $(OUTPUT)
-
+default: $(OTPUT) | clean-rubbish $(OBJDIR)
 
 $(OUTPUT): $(OBJS)
 	@echo Constructing $(OUTPUT) ...
@@ -387,7 +388,7 @@ $(OUTPUT): $(OBJS)
 
 all: $(OUTPUT)
 
-$(OBJS): $(OBJDIR)
+$(OBJS): | $(OBJDIR)
 
 $(OBJDIR)/%.o: %.c
 	@echo Compiling $< ...
@@ -399,7 +400,7 @@ $(OBJDIR)/%.o: %.cpp
 
 #
 # THE FOLLOWING RULES DEPEND ON THE ORDER OF THE DEPENDENCIES LIST!
-# 
+#
 # The rule $< will return the first dependency in the dependency list.
 # If you change the dependency list, make sure that the dependency you want
 # to process with the commands of the rule is first in the list!!!
@@ -417,32 +418,32 @@ $(YOUTPUT): $(YFILES)
 	@echo Yaccing $< ...
 	$(YACC) $(YACCFLAGS) $< 2>> $(LOGFILE)
 
-$(OBJBASEDIR): 
+$(OBJBASEDIR):
 	@if [ ! \( -d $(OBJBASEDIR) \) ]; then \
 		echo Creating $(OBJBASEDIR) ...; \
 		$(MKDIR) $(OBJBASEDIR); fi
 
-$(OBJDIR): $(OBJBASEDIR)
+$(OBJDIR): | $(OBJBASEDIR)
 	@if [ ! \( -d $(OBJDIR) \) ]; then \
 		echo Creating $(OBJDIR) ...; \
 		$(MKDIR) $(OBJDIR); fi
 
-$(LIBDIR): 
+$(LIBDIR):
 	@if [ ! \( -d $(LIBDIR) \) ]; then \
 		echo Creating $(LIBDIR) ...; \
 		$(MKDIR) $(LIBDIR); fi
 
-$(PSDIR): 
+$(PSDIR):
 	@if [ ! \( -d $(PSDIR) \) ]; then \
 		echo Creating $(PSDIR) ...; \
 		$(MKDIR) $(PSDIR); fi
 
-$(INCDIR): 
+$(INCDIR):
 	@if [ ! \( -d $(INCDIR) \) ]; then \
 		echo Creating $(INCDIR) ...; \
 		$(MKDIR) $(INCDIR); fi
 
-$(INCDIR)/QP: $(INCDIR)
+$(INCDIR)/QP: | $(INCDIR)
 	@if [ ! \( -d $(INCDIR)/QP \) ]; then \
 		echo Creating $(INCDIR)/QP ...; \
 		$(MKDIR) $(INCDIR)/QP; fi
@@ -450,13 +451,13 @@ $(INCDIR)/QP: $(INCDIR)
 $(DEPFILE):
 	$(TOUCH) $(DEPFILE)
 
-install-lib: $(OUTPUT) $(LIBDIR)
+install-lib: $(OUTPUT) | $(LIBDIR)
 	@echo Deleting old library $(notdir $(OUTPUT)) from $(LIBDIR) ...
 	-$(RM) $(LIBDIR)/$(OUTPUT)
 	@echo Installing new library $(notdir $(OUTPUT)) in $(LIBDIR) ...
 	$(CP)  $(OUTPUT) $(LIBDIR)
 
-install-includes:  $(HEADERS) $(INCDIR)/QP
+install-includes:  $(HEADERS) | $(INCDIR)/QP
 	@echo Deleting old include files from $(INCDIR)/QP ...
 	-$(RM) $(INCDIR)/QP/*.h
 	@echo Installing new include files in $(INCDIR)/QP ...
@@ -481,9 +482,9 @@ git-commit:
 
 git-push:
 	@echo Pushing sources to github...
-	$(GIT) push 
+	$(GIT) push
 
-postscript: $(LFILES) $(YFILES) $(PSDIR)
+postscript: $(LFILES) $(YFILES) | $(PSDIR)
 	@for X in $(LFILES); do \
 		echo Generating $$X.$(PS_SUFFIX) from $$X ...; \
 		$(MAKE_PS) $(MAKE_PS_FLAGS) $(PSDIR)/$$X.$(PS_SUFFIX) $$X; done
@@ -521,7 +522,7 @@ clean-rcs:
 
 clean: clean-rubbish clean-objects
 
-veryclean: clean clean-tmps clean-rcs 
+veryclean: clean clean-tmps clean-rcs
 	-$(RM) $(PSDIR)/*.$(PS_SUFFIX) *.$(PS_SUFFIX) *.$(TAR_SUFFIX) *.$(COMPRESS_SUFFIX) *.taz *tags 2> /dev/null
 
 checkout:
@@ -544,4 +545,3 @@ depend: $(HEADERS) $(SRCS) $(TMPSRCS)
 
 
 -include $(DEPFILE)
-
