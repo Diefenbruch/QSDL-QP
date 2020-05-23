@@ -378,7 +378,7 @@ OBJS = $(addprefix $(OBJDIR)/, $(TMPSRCS:.c=.o)) \
 #    logische aber keine Zeit-Abhängigkeiten!    #
 ##################################################
 
-default: $(OTPUT) | clean-rubbish $(OBJDIR)
+default: $(OUTPUT) | clean-rubbish $(OBJDIR)
 
 $(OUTPUT): $(OBJS)
 	@echo Constructing $(OUTPUT) ...
